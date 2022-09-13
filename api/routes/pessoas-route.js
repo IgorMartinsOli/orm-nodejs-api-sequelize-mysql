@@ -7,5 +7,6 @@ router.get('/pessoas', PessoaController.searchAll);
 router.get('/pessoas/:id', PessoaController.findByPk);
 router.post('/pessoas/new', PessoaController.novaPessoa);
 router.put('/pessoas/edit/:id', PessoaController.editPessoa);
+router.delete('/pessoas/delete/:id', PessoaController.deletePessoa);
 
 module.exports = router;

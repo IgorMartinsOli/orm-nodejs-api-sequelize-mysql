@@ -44,7 +44,7 @@ class PessoaController {
     static async deletePessoa (req, res) {
         const id = req.params.id;
         try {
-            await db.Pessoas.destroy(id);
+            await db.Pessoas.destroy({where: {id: Number(id)}});
             return res.status(200).json({success: true});
         }catch (err) {
             return res.status(500).json({error: err.message});
