@@ -50,6 +50,55 @@ class PessoaController {
             return res.status(500).json({error: err.message});
         }
     }
+
+    static async pegarUmaMatricula(req, res) {
+        const {estudanteId, matriculaId} = req.params
+
+        try {
+            const matricula = await db.Matriculas.findByPk({where:{
+                id: Number(matriculaId),
+                estudante_id: Number(estudanteId)
+            }});
+            return res.status(201).json(matricula);
+        }catch (err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+    static async novaMatricula (req, res){
+        const {estudanteId} = req.params;
+        const infoMatricula = { ...req.body, estudante_id: Number(estudanteId)};
+
+        try {
+            const novaMatricula = await db.Matriculas.create(infoMatricula);
+            return res.status(200).json(novaMatricula);
+        }catch(err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+
+    static async atualizaMatricula(req, res) {
+        const novasInfos = req.body;
+        const {estudanteId, matriculaId} = req.params
+        try {
+            await db.Matriculas.update(novasInfos, {where: {
+                id: Number(matriculaId),
+                estudante_id: Number(estudanteId)
+            }})
+            const matriculaAtualizada = await db.Pessoas.findByPk(matriculaId);
+            return res.status(200).json(matriculaAtualizada)
+        }catch(err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+    static async deleteMatricula (req, res) {
+        const {estudanteId, matriculaId} = req.params;
+        try {
+            await db.Matriculas.destroy({where: {id: Number(matriculaId)}});
+            return res.status(200).json({success: true});
+        }catch (err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
 }
 
 module.exports = PessoaController;
