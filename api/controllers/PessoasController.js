@@ -1,14 +1,24 @@
 const db = require('../models/index')
 
 class PessoaController {
-    static async searchAll(req, res) {
+    static async pegaPessoasAtivas(req, res) {
         try{
-            const todasPessoas = await db.Pessoas.findAll()
+            const pessoasAtivas = await db.Pessoas.findAll()
+            return res.status(200).json(pessoasAtivas);
+        }catch (err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+    
+    static async pegaTodasPessoas(req, res) {
+        try{
+            const todasPessoas = await db.Pessoas.scope('todos').findAll()
             return res.status(200).json(todasPessoas);
         }catch (err) {
             return res.status(500).json({error: err.message});
         }
     }
+
     static async findByPk(req, res) {
         const id = req.params.id
 
@@ -47,6 +57,17 @@ class PessoaController {
             await db.Pessoas.destroy({where: {id: Number(id)}});
             return res.status(200).json({success: true});
         }catch (err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+
+    static async restauraPessoa (req, res) {
+        const id = req.params.id
+        
+        try {
+            await db.Pessoas.restore({where: {id: Number(id)}});
+            res.status(200).json({success: true});
+        }catch (err){
             return res.status(500).json({error: err.message});
         }
     }
